@@ -79,7 +79,7 @@ Chép một mẫu dưới đây vào giữa hai dấu `` ` `` của `loiChuc`.
 **Ngắn, ngọt**
 
 ```
-Chúc cô giáo của anh một ngày 20/11 thật nhiều hoa, thật nhiều tiếng cười và thật ít bài phải chấm. Cảm ơn em vì đã luôn dịu dàng với học trò, và dịu dàng với cả anh nữa. Anh tự hào về em và thương em nhiều!
+Chúc cô giáo tương lai của anh một ngày 20/11 thật nhiều hoa, thật nhiều tiếng cười và thật ít bài kiểm tra. Mai này em đứng lớp, học trò của em sẽ may mắn lắm, vì cô giáo của chúng vừa giỏi vừa dịu dàng. Anh tự hào về em và thương em nhiều!
 ```
 
 **Vui, kiểu “học trò nộp bài”**
@@ -87,7 +87,7 @@ Chúc cô giáo của anh một ngày 20/11 thật nhiều hoa, thật nhiều t
 ```
 Thưa cô, hôm nay học trò tên Anh xin nộp bài tập về nhà: một lá thư.
 
-Đề bài là “Kể về người con gái em thương nhất”. Bài làm: người đó đứng lớp cả ngày mà vẫn cười rất xinh, về nhà còn chịu khó nghe anh kể chuyện linh tinh. Người đó là em.
+Đề bài là “Kể về người con gái em thương nhất”. Bài làm: người đó soạn giáo án đến khuya, run run mỗi lần tập giảng mà vẫn làm rất tốt, lại còn chịu khó nghe anh kể chuyện linh tinh. Người đó là cô giáo tương lai của anh.
 
 Mong cô chấm nhẹ tay. Chúc cô một ngày 20/11 thật vui!
 ```
@@ -95,9 +95,9 @@ Mong cô chấm nhẹ tay. Chúc cô một ngày 20/11 thật vui!
 **Khi hai người đang ở xa nhau**
 
 ```
-Hôm nay anh không thể tự tay tặng hoa cho em, nên anh gửi tạm lá thư này. Dù ở xa, anh vẫn biết em đang đứng lớp, vẫn nghĩ đến học trò trước rồi mới nghĩ đến mình.
+Hôm nay anh không thể tự tay tặng hoa cho em, nên anh gửi tạm lá thư này. Dù ở xa, anh vẫn biết em đang cố gắng từng ngày với bài vở, với những buổi tập giảng, để mai này thành một cô giáo thật giỏi.
 
-Anh mong em luôn khoẻ, luôn tìm thấy niềm vui trong nghề mình yêu. Đợi anh về, anh sẽ tặng em bó hoa thật, cùng một cái ôm thật lâu.
+Anh mong em luôn khoẻ, học thật tốt và giữ mãi tình yêu với nghề mình đã chọn. Đợi anh về, anh sẽ tặng em bó hoa thật, cùng một cái ôm thật lâu.
 
 Anh tự hào về em và thương em nhiều!
 ```

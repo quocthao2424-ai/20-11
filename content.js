@@ -13,13 +13,13 @@ window.NOI_DUNG_THIEP = {
   tenNguoiNhan: "em",                 // tiêu đề bìa sẽ là “Gửi em”
   ngayTrongThu: "Ngày 20 tháng 11",
 
-  loiMoDau: "Gửi cô giáo của anh,",
+  loiMoDau: "Gửi cô giáo tương lai của anh,",
 
-  loiChuc: `Hôm nay là ngày của những người đứng trên bục giảng, và anh muốn là người đầu tiên nói lời cảm ơn với em. Cảm ơn em vì đã kiên nhẫn với từng bài giảng, dịu dàng với từng học trò, mà vẫn còn để dành thật nhiều dịu dàng cho anh.
+  loiChuc: `Hôm nay là ngày của những người đứng trên bục giảng. Em chưa chính thức đứng lớp, nhưng trong mắt anh, em đã là một cô giáo rồi: chăm chỉ soạn từng giáo án, hồi hộp trước mỗi buổi tập giảng, và lúc nào cũng nghĩ xem làm sao để giảng cho học trò dễ hiểu nhất.
 
-Anh biết có những hôm em mệt, giọng khàn đi vì giảng bài, tối về vẫn ngồi chấm bài đến khuya. Anh không chấm bài giúp em được, nhưng anh luôn muốn là người nghe em kể chuyện lớp, chuyện trò mỗi tối.
+Anh biết có những hôm em mệt vì bài vở, vì thi cử, vì lo không biết mình có làm tốt không. Anh không học thay em được, nhưng anh luôn muốn là người nghe em kể chuyện trường, chuyện lớp mỗi tối, và là người tin em nhất.
 
-Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui trong nghề mình yêu. Anh tự hào về em và thương em nhiều!`,
+Chúc cô giáo tương lai của anh một ngày 20/11 thật vui, học thật giỏi và giữ mãi tình yêu với nghề mình đã chọn. Anh tự hào về em và thương em nhiều!`,
 
   loiKet: "Thương em,",
   chuKy: "Anh",
@@ -35,7 +35,7 @@ Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui 
     batDau: true,
     tieuDe: "Bài kiểm tra 15 phút",
     mon: "Môn: Hiểu anh",
-    hoTen: "Cô giáo của anh",
+    hoTen: "Cô giáo tương lai của anh",
     huongDan: "Chọn một đáp án cho mỗi câu. Cô giáo không được nhìn bài bạn bên cạnh nha.",
     cauHoi: [
       {
@@ -45,12 +45,12 @@ Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui 
       },
       {
         hoi: "Ai tự hào về em nhất?",
-        traLoi: ["Học trò của em", "Bố mẹ em", "Anh"],
+        traLoi: ["Thầy cô của em", "Bố mẹ em", "Anh"],
         phanHoi: "Chính xác! Nhưng anh xin giành hạng nhất nhé."
       },
       {
         hoi: "Anh thương em bao nhiêu?",
-        traLoi: ["Một chút", "Rất nhiều", "Nhiều hơn số bài em đã chấm"],
+        traLoi: ["Một chút", "Rất nhiều", "Nhiều hơn số trang giáo án em đã soạn"],
         phanHoi: "Đúng luôn. Mà chắc còn nhiều hơn thế nữa."
       }
     ],
@@ -65,11 +65,11 @@ Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui 
     quocHieu: "VƯƠNG QUỐC TRÁI TIM ANH",
     tieuNgu: "Thương em · Nhớ em · Chiều em",
     tieuDe: "Giấy khen",
-    traoTang: "Cô giáo của anh",
-    danhHieu: "Cô giáo dễ thương nhất thế giới",
+    traoTang: "Cô giáo tương lai của anh",
+    danhHieu: "Cô giáo tương lai dễ thương nhất",
     lyDo: [
-      "Kiên nhẫn với học trò cả ngày dài",
-      "Về nhà vẫn dịu dàng với anh",
+      "Chăm chỉ soạn giáo án đến khuya",
+      "Hồi hộp mỗi lần tập giảng mà vẫn làm rất tốt",
       "Cười lên một cái là anh hết mệt"
     ],
     nguoiTrao: "Người trao",
@@ -87,7 +87,7 @@ Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui 
     phieuQua: [
       "Một buổi hẹn hò, em chọn chỗ",
       "Một cái ôm thật lâu, không giới hạn thời gian",
-      "Một tối anh nghe em kể chuyện lớp, không ngắt lời"
+      "Một tối anh nghe em kể chuyện trường lớp, không ngắt lời"
     ],
     hanDung: "Hạn dùng: mãi mãi",
 
@@ -96,7 +96,7 @@ Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui 
     nutKhong: "Không",
     // Mỗi lần bấm “Không”, nút đổi chữ theo danh sách này, nhỏ dần, còn nút “Có” to dần.
     khiBamKhong: ["Em chắc chưa?", "Nghĩ lại đi mà", "Anh buồn đó nha", "Bấm nhầm rồi đúng không?", "Thôi bấm “Có” đi"],
-    loiCuoi: "Anh biết mà! Anh cũng thương em nhiều lắm. Chúc cô giáo của anh một ngày 20/11 thật hạnh phúc!",
+    loiCuoi: "Anh biết mà! Anh cũng thương em nhiều lắm. Chúc cô giáo tương lai của anh một ngày 20/11 thật hạnh phúc!",
     nutXemLai: "Xem lại từ đầu"
   },
 
