@@ -83,6 +83,7 @@ Chúc cô giáo tương lai của anh một ngày 20/11 thật vui, học thật
     tieuDe: "Một món quà nhỏ",
     goiY: "Chạm vào hộp quà để mở",
     loiNhanHoa: "Tặng em một bó hoa không bao giờ héo.",
+    nutXemPhieu: "Còn quà nữa nè",
     tieuDePhieu: "Phiếu quà dành riêng cho em",
     phieuQua: [
       "Một buổi hẹn hò, em chọn chỗ",
@@ -90,6 +91,7 @@ Chúc cô giáo tương lai của anh một ngày 20/11 thật vui, học thật
       "Một tối anh nghe em kể chuyện trường lớp, không ngắt lời"
     ],
     hanDung: "Hạn dùng: mãi mãi",
+    nutCauHoi: "Anh còn một câu muốn hỏi",
 
     cauHoiCuoi: "Em có thương anh không?",
     nutCo: "Có chứ",

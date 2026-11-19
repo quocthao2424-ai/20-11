@@ -226,54 +226,124 @@
     return { play: play };
   })();
 
-  /* ---------- Chuyển giữa các màn ---------- */
-  var scenes = [];
+  /* ---------- Chuyển giữa các màn (mỗi màn một màn hình) ---------- */
+  var scenes = ['scene-letter'];
   if (enabled(data.baiKiemTra) && Array.isArray(data.baiKiemTra.cauHoi) && data.baiKiemTra.cauHoi.length) scenes.push('scene-quiz');
   if (enabled(data.giayKhen)) scenes.push('scene-award');
   if (enabled(data.hopQua)) scenes.push('scene-gift');
+  ['scene-quiz', 'scene-award', 'scene-gift'].forEach(function (id) {
+    if (scenes.indexOf(id) < 0) byId(id).hidden = true;
+  });
 
-  function nextSceneAfter(id) {
-    if (id === 'scene-letter') return scenes[0] || null;
-    var i = scenes.indexOf(id);
-    return i >= 0 ? scenes[i + 1] || null : null;
+  var current = 0;
+  var unlocked = 0;          // màn xa nhất đã được phép tới
+  var navNext = byId('nav-next');
+  var navBack = byId('nav-back');
+  var dots = byId('dots');
+  var nextLabels = {
+    'scene-letter': clean(data.nutSauThu) || 'Còn bất ngờ nữa đó',
+    'scene-quiz': clean(data.baiKiemTra && data.baiKiemTra.nutTiep) || 'Tiếp',
+    'scene-award': clean(data.giayKhen && data.giayKhen.nutTiep) || 'Tiếp'
+  };
+
+  scenes.forEach(function () { dots.appendChild(make('li')); });
+
+  function setInert(section, value) {
+    if (value) {
+      section.setAttribute('inert', '');
+      section.setAttribute('aria-hidden', 'true');
+    } else {
+      section.removeAttribute('inert');
+      section.removeAttribute('aria-hidden');
+    }
   }
 
-  function scrollToEl(el, focusEl) {
-    var smooth = !reduceMotion.matches;
-    window.requestAnimationFrame(function () {
-      el.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
-      if (focusEl) {
-        try { focusEl.focus({ preventScroll: true }); } catch (e) { focusEl.focus(); }
-      }
+  function updateNav() {
+    navBack.hidden = current === 0;
+    var canNext = unlocked > current && current < scenes.length - 1;
+    navNext.hidden = !canNext;
+    if (canNext) navNext.textContent = nextLabels[scenes[current]] || 'Tiếp';
+    Array.prototype.forEach.call(dots.children, function (dot, i) {
+      if (i === current) dot.setAttribute('aria-current', 'step');
+      else dot.removeAttribute('aria-current');
+      dot.classList.toggle('is-done', i <= unlocked && i !== current);
     });
+    dots.setAttribute('aria-label', 'Màn ' + (current + 1) + ' trên ' + scenes.length);
   }
 
-  function reveal(id) {
-    var section = byId(id);
-    if (!section) return;
-    section.hidden = false;
-    scrollToEl(section, section.querySelector('[tabindex="-1"]'));
-    if (id === 'scene-award') {
+  function unlock(index) {
+    if (index > unlocked) unlocked = Math.min(index, scenes.length - 1);
+    updateNav();
+  }
+
+  function focusFirst(section) {
+    var target = section.querySelector('[tabindex="-1"]');
+    if (!target) return;
+    try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= scenes.length || index > unlocked || index === current) return;
+    var from = byId(scenes[current]);
+    var to = byId(scenes[index]);
+    var forward = index > current;
+
+    from.classList.remove('is-active');
+    from.classList.toggle('is-before', forward);
+    setInert(from, true);
+
+    to.classList.remove('is-before');
+    if (!forward) to.classList.add('is-before');
+    // Đặt vị trí xuất phát rồi mới bật để hiệu ứng trượt chạy đúng hướng.
+    void to.offsetWidth;
+    to.classList.remove('is-before');
+    to.classList.add('is-active');
+    to.scrollTop = 0;
+    setInert(to, false);
+
+    current = index;
+    updateNav();
+    focusFirst(to);
+
+    if (scenes[index] === 'scene-award') {
+      unlock(index + 1);
       window.setTimeout(function () {
-        var stamp = section.querySelector('.award-stamp');
-        var c = center(stamp);
+        var c = center(to.querySelector('.award-stamp'));
         fx.burst(c.x, c.y, 26);
       }, reduceMotion.matches ? 0 : 900);
     }
   }
 
-  function wireNext(buttonId, fromId, label) {
-    var btn = byId(buttonId);
-    var target = nextSceneAfter(fromId);
-    if (!target) return null;
-    var text = clean(label);
-    if (text) btn.textContent = text;
-    btn.addEventListener('click', function () {
-      btn.hidden = true;
-      reveal(target);
-    });
-    return btn;
-  }
+  navNext.addEventListener('click', function () { goTo(current + 1); });
+  navBack.addEventListener('click', function () { goTo(current - 1); });
+
+  // Vuốt ngang để chuyển màn.
+  (function () {
+    var startX = 0, startY = 0, tracking = false;
+    var stage = byId('stage');
+    stage.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      tracking = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+    stage.addEventListener('touchend', function (e) {
+      if (!tracking) return;
+      tracking = false;
+      var t = e.changedTouches[0];
+      var dx = t.clientX - startX;
+      var dy = t.clientY - startY;
+      if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.7) return;
+      if (dx < 0) goTo(current + 1); else goTo(current - 1);
+    }, { passive: true });
+  })();
+
+  // Phím mũi tên trái/phải trên máy tính.
+  document.addEventListener('keydown', function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key === 'ArrowRight') goTo(current + 1);
+    else if (e.key === 'ArrowLeft') goTo(current - 1);
+  });
 
   /* ---------- Màn 1: Phong thư ---------- */
   var envelope = byId('envelope');
@@ -321,8 +391,6 @@
     envelope.style.setProperty('--rise', Math.ceil(rise) + 'px');
   }
 
-  var letterNext = null;
-
   function openLetter() {
     if (envelope.classList.contains('is-open')) return;
     measure();
@@ -335,19 +403,19 @@
 
     var wait = reduceMotion.matches ? 0 : 420;
     window.setTimeout(function () {
-      var top = letter.getBoundingClientRect().top;
-      if (top < 0 || top > window.innerHeight * 0.5) {
-        letter.scrollIntoView({ block: 'start', behavior: wait ? 'smooth' : 'auto' });
-      }
+      var scene = byId('scene-letter');
+      var top = letter.getBoundingClientRect().top - scene.getBoundingClientRect().top;
+      scene.scrollTo({ top: Math.max(0, scene.scrollTop + top - 60), behavior: wait ? 'smooth' : 'auto' });
       fx.rain(5000);
-      if (letterNext) letterNext.hidden = false;
+      unlock(1);
     }, wait);
   }
 
-  /* ---------- Màn 2: Bài kiểm tra ---------- */
+  /* ---------- Màn 2: Bài kiểm tra (từng câu một) ---------- */
   function renderQuiz() {
     var quiz = data.baiKiemTra;
     if (scenes.indexOf('scene-quiz') < 0) return;
+    var sceneIndex = scenes.indexOf('scene-quiz');
 
     setText('quiz-title', quiz.tieuDe);
     setText('quiz-subject', quiz.mon);
@@ -358,13 +426,21 @@
 
     var list = byId('quiz-list');
     var questions = quiz.cauHoi.filter(function (q) { return q && clean(q.hoi) && cleanList(q.traLoi).length; });
-    var answered = 0;
-    var nextBtn = wireNext('quiz-next', 'scene-quiz', quiz.nutTiep);
+    var items = [];
+
+    function show(i) {
+      items.forEach(function (item, k) { item.hidden = k !== i; });
+      var q = items[i].querySelector('.quiz-q');
+      if (i > 0) { try { q.focus({ preventScroll: true }); } catch (e) { q.focus(); } }
+    }
 
     questions.forEach(function (q, qi) {
       var item = make('li', 'quiz-item');
-      var question = make('p', 'quiz-q', clean(q.hoi));
+      var question = make('p', 'quiz-q');
       question.id = 'quiz-q-' + qi;
+      question.tabIndex = -1;
+      question.appendChild(make('span', 'quiz-no', 'Câu ' + (qi + 1) + '/' + questions.length));
+      question.appendChild(document.createTextNode(clean(q.hoi)));
       var group = make('div', 'quiz-options');
       group.setAttribute('role', 'group');
       group.setAttribute('aria-labelledby', question.id);
@@ -383,8 +459,10 @@
           reply.textContent = clean(q.phanHoi) || 'Đúng rồi!';
           var c = center(btn);
           fx.burst(c.x, c.y, 10);
-          answered += 1;
-          if (answered === questions.length) grade(nextBtn);
+          window.setTimeout(function () {
+            if (qi + 1 < items.length) show(qi + 1);
+            else grade(sceneIndex);
+          }, 1600);
         });
         group.appendChild(btn);
         return btn;
@@ -394,27 +472,30 @@
       item.appendChild(group);
       item.appendChild(reply);
       list.appendChild(item);
+      items.push(item);
     });
+
+    if (items.length) show(0);
   }
 
-  function grade(nextBtn) {
+  function grade(sceneIndex) {
     var quiz = data.baiKiemTra;
     var score = byId('quiz-score');
     var value = byId('quiz-score-value');
     var points = clean(quiz.diem) || '10';
-    window.setTimeout(function () {
-      value.textContent = points;
-      value.setAttribute('aria-label', points + ' điểm');
-      score.classList.add('is-graded');
-      var remark = clean(quiz.loiPhe);
-      if (remark) {
-        byId('quiz-remark-text').textContent = remark;
-        byId('quiz-remark').hidden = false;
-      }
-      var c = center(score);
-      fx.burst(c.x, c.y, 40);
-      if (nextBtn) nextBtn.hidden = false;
-    }, reduceMotion.matches ? 0 : 500);
+    byId('quiz-list').hidden = true;
+    byId('quiz-hint').hidden = true;
+    value.textContent = points;
+    value.setAttribute('aria-label', points + ' điểm');
+    score.classList.add('is-graded');
+    var remark = clean(quiz.loiPhe);
+    if (remark) {
+      byId('quiz-remark-text').textContent = remark;
+      byId('quiz-remark').hidden = false;
+    }
+    var c = center(score);
+    fx.burst(c.x, c.y, 40);
+    unlock(sceneIndex + 1);
   }
 
   /* ---------- Màn 3: Giấy khen ---------- */
@@ -435,9 +516,6 @@
     var ul = byId('award-reasons');
     reasons.forEach(function (reason) { ul.appendChild(make('li', '', reason)); });
     if (!reasons.length) byId('award-reason-label').hidden = true;
-
-    var btn = wireNext('award-next', 'scene-award', award.nutTiep);
-    if (btn) btn.hidden = false;
   }
 
   /* ---------- Màn 4: Hộp quà ---------- */
@@ -468,7 +546,28 @@
       li.appendChild(body);
       ul.appendChild(li);
     });
-    if (!coupons.length) byId('coupons-title').hidden = true;
+
+    // Các bước bên trong hộp quà: bó hoa → phiếu quà → câu hỏi cuối.
+    function showStep(id, focusId) {
+      ['gift-step-flower', 'gift-step-coupons', 'gift-step-ask'].forEach(function (stepId) {
+        byId(stepId).hidden = stepId !== id;
+      });
+      var scene = byId('scene-gift');
+      scene.scrollTop = 0;
+      var target = byId(focusId);
+      try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
+    }
+    setText('to-coupons', gift.nutXemPhieu);
+    setText('to-ask', gift.nutCauHoi);
+    byId('to-coupons').addEventListener('click', function () {
+      if (coupons.length) showStep('gift-step-coupons', 'coupons-title');
+      else showStep('gift-step-ask', 'ask-question');
+    });
+    byId('to-ask').addEventListener('click', function () {
+      showStep('gift-step-ask', 'ask-question');
+      var c = center(byId('ask-question'));
+      fx.burst(c.x, c.y, 24);
+    });
 
     var giftBtn = byId('gift-btn');
     giftBtn.addEventListener('click', function () {
@@ -479,8 +578,7 @@
       fx.rain(4000);
       window.setTimeout(function () {
         byId('gift-stage').hidden = true;
-        var content = byId('gift-content');
-        content.hidden = false;
+        byId('gift-content').hidden = false;
         var heading = byId('gift-title');
         try { heading.focus({ preventScroll: true }); } catch (e) { heading.focus(); }
       }, reduceMotion.matches ? 0 : 650);
@@ -518,8 +616,8 @@
     });
 
     byId('restart-btn').addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
-      try { letter.focus({ preventScroll: true }); } catch (e) { letter.focus(); }
+      // Quay về màn đầu, đi lùi qua từng màn để hiệu ứng trượt tự nhiên.
+      goTo(0);
     });
   }
 
@@ -609,7 +707,8 @@
   renderGift();
   measure();
 
-  letterNext = wireNext('letter-next', 'scene-letter', data.nutSauThu);
+  scenes.forEach(function (id, i) { if (i > 0) setInert(byId(id), true); });
+  updateNav();
 
   if ('ResizeObserver' in window) {
     new ResizeObserver(measure).observe(letter);

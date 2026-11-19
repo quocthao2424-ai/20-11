@@ -99,34 +99,127 @@ body {
 
 /* ===== Nhành hoa ở góc ===== */
 .sprig {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
+  z-index: 0;
   width: clamp(92px, 27vw, 150px);
   height: auto;
   pointer-events: none;
 }
 
-/* ===== Bố cục ===== */
-.page {
-  max-width: 440px;
-  margin: 0 auto;
-  padding: clamp(76px, 22vw, 104px) 16px 64px;
+/* ===== Bố cục: mỗi màn là một màn hình riêng ===== */
+:root { --nav-h: 104px; }
+
+.js body { height: 100%; overflow: hidden; }
+
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
 }
 
 .scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(58px, 15vw, 84px) 16px calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 12px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(48px);
+  transition:
+    opacity 450ms ease,
+    transform 450ms cubic-bezier(.2, .7, .3, 1),
+    visibility 0s linear 450ms;
+}
+.scene.is-before { transform: translateX(-48px); }
+.scene.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 450ms ease,
+    transform 450ms cubic-bezier(.2, .7, .3, 1),
+    visibility 0s;
+}
+
+/* Nội dung nằm giữa màn hình; nếu dài hơn màn hình thì cuộn trong chính màn đó. */
+.scene-inner {
+  width: 100%;
+  max-width: 440px;
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
-.scene + .scene {
-  margin-top: 72px;
-  animation: scene-in 600ms cubic-bezier(.2, .7, .3, 1) both;
-}
+
 @keyframes scene-in {
   from { opacity: 0; transform: translateY(24px); }
 }
+
+/* ===== Thanh chuyển màn ===== */
+.nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  padding: 18px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, var(--bg) 62%, rgba(248, 241, 229, 0));
+  pointer-events: none;
+}
+.nav > * { pointer-events: auto; }
+
+.dots {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.dots li {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(117, 86, 74, 0.25);
+  transition: width 300ms ease, background-color 300ms ease;
+}
+.dots li.is-done { background: rgba(201, 138, 128, 0.7); }
+.dots li[aria-current="step"] { width: 24px; background: var(--env-dark); }
+
+.nav-row {
+  max-width: 440px;
+  min-height: 48px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.nav-back {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--line), 0 6px 14px -10px var(--shadow);
+  cursor: pointer;
+}
+.nav-back svg { width: 22px; height: 22px; }
+.nav-next { flex: 0 1 auto; }
+.nav-next::after { content: " →"; }
+.nav-next:not([hidden]) { animation: nudge 1.8s ease-in-out 1s infinite; }
 
 .scene-kicker {
   margin: 0 0 2px;
@@ -202,11 +295,9 @@ body {
   box-shadow: inset 0 0 0 1.5px var(--line);
 }
 
-.next-btn::after { content: " →"; }
-.next-btn:not([hidden]) { animation: nudge 1.8s ease-in-out 1s infinite; }
 @keyframes nudge {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
 }
 
 /* ===== Phong thư ===== */
@@ -331,9 +422,9 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 62vh;
+  max-height: 34vh;
   object-fit: cover;
-  object-position: 50% 30%;
+  object-position: 50% 28%;
   border-radius: 2px;
 }
 
@@ -471,11 +562,11 @@ body {
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: q;
 }
-.quiz-item { margin-top: 18px; counter-increment: q; }
-.quiz-q { margin: 0 0 8px; font-weight: 500; }
-.quiz-q::before { content: "Câu " counter(q) ". "; color: var(--ink-soft); }
+.quiz-item { margin-top: 14px; animation: scene-in 400ms cubic-bezier(.2, .7, .3, 1) both; }
+.quiz-q { margin: 0 0 10px; font-weight: 500; font-size: 1.1rem; }
+.quiz-q:focus { outline: none; }
+.quiz-no { display: block; font-size: 0.85rem; font-weight: 400; color: var(--ink-soft); }
 
 .quiz-options { display: grid; gap: 8px; }
 .quiz-option {
@@ -545,7 +636,7 @@ body {
   box-shadow: 0 14px 30px -16px var(--shadow), 0 1px 2px rgba(92, 52, 40, 0.1);
 }
 .award-inner {
-  padding: 22px 16px 20px;
+  padding: 16px 14px 14px;
   border: 3px double var(--gold);
   background:
     radial-gradient(60% 40% at 50% 45%, rgba(201, 138, 128, 0.1), transparent 70%),
@@ -561,15 +652,15 @@ body {
   font-style: italic;
 }
 .award-title {
-  margin: 18px 0 14px;
-  font-size: clamp(1.9rem, 9vw, 2.4rem);
+  margin: 10px 0 6px;
+  font-size: clamp(1.6rem, 8vw, 2.1rem);
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--red-pen);
 }
 .award-line {
-  margin: 10px 0 0;
+  margin: 6px 0 0;
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -582,45 +673,50 @@ body {
   font-weight: 700;
   line-height: 1.25;
 }
-.award-name { font-size: 1.9rem; }
-.award-honor { font-size: 1.6rem; color: var(--seal); }
+.award-name { font-size: 1.6rem; }
+.award-honor { font-size: 1.4rem; color: var(--seal); }
 .award-reasons {
   margin: 6px auto 0;
   padding: 0;
   max-width: 300px;
   list-style: none;
-  font-size: 0.98rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
-.award-reasons li { margin-top: 4px; }
+.award-reasons li { margin-top: 3px; }
 .award-reasons li::before { content: "♥ "; color: var(--env); }
 
-.award-foot { margin-top: 18px; text-align: right; }
-.award-date { margin: 0; font-size: 0.9rem; font-style: italic; color: var(--ink-soft); }
+.award-foot {
+  margin-top: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+}
+.award-date { flex: 1 1 0; margin: 0 0 4px; font-size: 0.85rem; font-style: italic; line-height: 1.35; color: var(--ink-soft); }
 .award-sign {
   position: relative;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  min-width: 140px;
-  margin-top: 4px;
+  flex: none;
+  min-width: 96px;
 }
 .award-signer { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; }
 .award-signature {
   position: relative;
   z-index: 1;
-  margin-top: 30px;
+  margin-top: 10px;
   font-family: "Dancing Script", "Brush Script MT", cursive;
   font-weight: 700;
-  font-size: 1.9rem;
+  font-size: 1.8rem;
   line-height: 1;
 }
 .award-stamp {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  width: 82px;
-  height: 82px;
-  margin-left: -72px;
+  flex: none;
+  width: 70px;
+  height: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -629,14 +725,14 @@ body {
   border-radius: 50%;
   box-shadow: inset 0 0 0 3px #fffaf0, inset 0 0 0 4.5px rgba(184, 50, 42, 0.6);
   color: rgba(184, 50, 42, 0.8);
-  font-size: 0.62rem;
+  font-size: 0.56rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   transform: rotate(-14deg);
   mix-blend-mode: multiply;
 }
-.award-stamp svg { width: 22px; height: 22px; margin-bottom: 1px; }
-#scene-award:not([hidden]) .award-stamp {
+.award-stamp svg { width: 18px; height: 18px; margin-bottom: 1px; }
+#scene-award.is-active .award-stamp {
   animation: stamp-in 500ms cubic-bezier(.2, .9, .3, 1.3) 700ms both;
 }
 @keyframes stamp-in {
@@ -741,7 +837,17 @@ body {
   animation: scene-in 600ms cubic-bezier(.2, .7, .3, 1) both;
 }
 
-.bouquet { width: min(240px, 70vw); height: auto; }
+.bouquet { width: min(210px, 58vw); height: auto; }
+.gift-step {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: scene-in 500ms cubic-bezier(.2, .7, .3, 1) both;
+}
+.gift-step-btn { margin-top: 22px; }
+.gift-step-btn::after { content: " →"; }
+.coupons-title:focus, .ask-question:focus { outline: none; }
 .bloom {
   transform-box: fill-box;
   transform-origin: center;
@@ -759,7 +865,7 @@ body {
 }
 
 .coupons-title {
-  margin: 34px 0 12px;
+  margin: 0 0 12px;
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -772,7 +878,7 @@ body {
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 .coupon {
   position: relative;
@@ -805,14 +911,14 @@ body {
   line-height: 1;
   letter-spacing: 0;
 }
-.coupon-body { padding: 12px 14px; }
+.coupon-body { padding: 9px 12px; }
 .coupon-text { margin: 0; font-weight: 500; line-height: 1.4; }
 .coupon-exp { margin: 4px 0 0; font-size: 0.8rem; font-style: italic; color: var(--ink-soft); }
 
 .ask {
   width: 100%;
-  margin-top: 40px;
-  padding: 24px 18px;
+  margin-top: 0;
+  padding: 20px 18px;
   border-radius: 16px;
   background: var(--paper);
   box-shadow: 0 14px 30px -18px var(--shadow), inset 0 0 0 1.5px #f0e2d0;
@@ -865,10 +971,6 @@ body {
 }
 
 /* ===== Hoạt ảnh nền lãng mạn ===== */
-.page,
-.sprig { position: relative; z-index: 1; }
-.sprig { position: absolute; z-index: 2; }
-
 .ambient {
   position: fixed;
   inset: 0;
@@ -970,12 +1072,12 @@ body {
 
 /* Dây đèn */
 .garland {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 58px;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
 }
 .garland-wire {
@@ -1012,8 +1114,14 @@ body {
   to { opacity: 1; box-shadow: 0 0 12px 4px rgba(255, 210, 120, 0.75), 0 0 26px 10px rgba(255, 200, 110, 0.28); }
 }
 
-/* Phong thư lơ lửng khi chưa mở */
-.envelope:not(.is-open) { animation: hover-float 3.2s ease-in-out infinite; }
+/* Phong thư lơ lửng khi chưa mở. Cắt phần lá thư giấu bên trong
+   để màn 1 không có thanh cuộn thừa (bóng đổ vẫn được giữ nhờ overflow-clip-margin). */
+.envelope:not(.is-open) {
+  overflow: hidden;
+  overflow: clip;
+  overflow-clip-margin: 40px;
+  animation: hover-float 3.2s ease-in-out infinite;
+}
 @keyframes hover-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
@@ -1025,6 +1133,9 @@ html:not(.js) .env-back,
 html:not(.js) .env-front,
 html:not(.js) .env-flap { display: none; }
 html:not(.js) .letter { position: static; padding-bottom: 24px; }
+html:not(.js) .stage,
+html:not(.js) .scene { position: static; opacity: 1; visibility: visible; transform: none; }
+html:not(.js) .nav { display: none; }
 
 /* ===== Giảm chuyển động: hiện mọi thứ ngay ===== */
 @media (prefers-reduced-motion: reduce) {

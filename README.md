@@ -40,17 +40,23 @@ Nên kiểm tra:
 
 ## 2. Thiệp có gì
 
-Người nhận đi lần lượt qua 4 màn. Màn sau chỉ hiện khi xong màn trước:
+Thiệp gồm 4 màn hình riêng, mỗi lúc chỉ hiện một màn, giống xem story. Sang màn sau
+bằng nút ở đáy màn hình hoặc vuốt sang trái; quay lại bằng nút ← hoặc vuốt sang phải
+(trên máy tính dùng phím mũi tên). Các chấm ở đáy cho biết đang ở màn mấy. Nút sang
+màn sau chỉ hiện khi đã xong màn hiện tại.
 
 1. **Phong thư**: bấm “Mở thư”, nắp mở, lá thư trồi lên kèm ảnh kỷ niệm và hoa rơi.
-2. **Bài kiểm tra 15 phút – Môn: Hiểu anh**: trang giấy tập kẻ dòng, có lề đỏ.
+   Lá thư dài hơn một màn hình nên đọc bằng cách cuộn trong chính màn này.
+2. **Bài kiểm tra 15 phút – Môn: Hiểu anh**: hiện từng câu một trên trang giấy tập.
    Chọn đáp án nào cũng đúng; làm xong được đóng dấu **10 điểm** bằng mực đỏ, kèm lời phê.
 3. **Giấy khen** kiểu văn bản hành chính “VƯƠNG QUỐC TRÁI TIM ANH”, có con dấu đỏ.
-4. **Hộp quà**: chạm vào thì bó hoa nở, có pháo hoa trái tim và các phiếu quà. Cuối
-   cùng là câu “Em có thương anh không?”. Mỗi lần bấm “Không”, nút đó nhỏ lại và đổi
-   chữ, còn nút “Có” to dần. Bấm “Có” thì hiện lời nhắn cuối.
+4. **Hộp quà**: chạm vào hộp thì lần lượt hiện bó hoa nở, rồi phiếu quà, rồi câu hỏi
+   “Em có thương anh không?”. Mỗi lần bấm “Không”, nút đó nhỏ lại và đổi chữ, còn nút
+   “Có” to dần. Bấm “Có” thì có pháo hoa trái tim và lời nhắn cuối.
 
-Nếu điện thoại bật “giảm chuyển động”, mọi thứ hiện ngay, không có hiệu ứng.
+Xung quanh thiệp có dây đèn lấp lánh, tim và cánh hoa bay, đốm sáng, bướm; chạm vào
+đâu cũng nảy ra vài trái tim nhỏ. Nếu điện thoại bật “giảm chuyển động”, các hiệu ứng
+tự tắt và mọi thứ hiện ngay.
 
 ## 3. Sửa nội dung
 
