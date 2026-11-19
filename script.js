@@ -151,6 +151,21 @@
     }
 
     return {
+      pop: function (x, y) {
+        if (!ctx || reduceMotion.matches) return;
+        for (var i = 0; i < 7; i++) {
+          var angle = -Math.PI / 2 + (Math.random() - 0.5) * 2.2;
+          var speed = 1.5 + Math.random() * 2.8;
+          parts.push({
+            kind: 'heart', x: x, y: y,
+            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            g: 0.05, size: 5 + Math.random() * 4,
+            rot: (Math.random() - 0.5) * 0.6, vr: (Math.random() - 0.5) * 0.05,
+            sway: 0, color: pick(colors), life: 0, maxLife: 55 + Math.random() * 25
+          });
+        }
+        start();
+      },
       rain: function (ms) {
         if (!ctx || reduceMotion.matches) return;
         rainUntil = Math.max(rainUntil, performance.now() + ms);
@@ -508,7 +523,86 @@
     });
   }
 
+  /* ---------- Hoạt ảnh nền: dây đèn, đốm sáng, tim bay, bướm ---------- */
+  function rand(min, max) { return min + Math.random() * (max - min); }
+
+  function buildGarland() {
+    var garland = byId('garland');
+    if (!garland) return;
+    var count = window.innerWidth < 480 ? 9 : 15;
+    for (var i = 1; i <= count; i++) {
+      var t = i / (count + 1);
+      // Bóng đèn nằm đúng trên đường cong của dây: y = 4 + 96·t·(1−t) trên khung cao 40.
+      var y = (4 + 96 * t * (1 - t)) / 40 * 100;
+      var bulb = make('span', 'bulb');
+      bulb.style.setProperty('--x', (t * 100).toFixed(2) + '%');
+      bulb.style.setProperty('--y', 'calc(' + y.toFixed(2) + '% - 1px)');
+      bulb.style.setProperty('--dur', rand(1.4, 2.8).toFixed(2) + 's');
+      bulb.style.setProperty('--delay', (-rand(0, 3)).toFixed(2) + 's');
+      garland.appendChild(bulb);
+    }
+  }
+
+  function buildAmbient() {
+    var layer = byId('ambient');
+    if (!layer || reduceMotion.matches) return;
+    var small = window.innerWidth < 480;
+    var glow = ['rgba(255, 214, 150, 0.55)', 'rgba(240, 180, 170, 0.5)', 'rgba(255, 236, 200, 0.6)'];
+    var i, node;
+
+    for (i = 0; i < (small ? 6 : 9); i++) {
+      node = make('span', 'bokeh');
+      node.style.setProperty('--x', rand(0, 100).toFixed(1) + '%');
+      node.style.setProperty('--y', rand(5, 95).toFixed(1) + '%');
+      node.style.setProperty('--size', Math.round(rand(70, small ? 150 : 220)) + 'px');
+      node.style.setProperty('--c', glow[i % glow.length]);
+      node.style.setProperty('--dx', Math.round(rand(-40, 40)) + 'px');
+      node.style.setProperty('--dy', Math.round(rand(-50, 50)) + 'px');
+      node.style.setProperty('--dur', rand(9, 16).toFixed(1) + 's');
+      node.style.setProperty('--delay', (-rand(0, 16)).toFixed(1) + 's');
+      layer.appendChild(node);
+    }
+
+    var kinds = ['heart-1', 'heart-2', 'petal'];
+    for (i = 0; i < (small ? 10 : 16); i++) {
+      var dur = rand(13, 24);
+      node = make('span', 'float ' + kinds[i % kinds.length]);
+      node.style.setProperty('--x', rand(2, 96).toFixed(1) + '%');
+      node.style.setProperty('--size', Math.round(rand(10, 22)) + 'px');
+      node.style.setProperty('--dur', dur.toFixed(1) + 's');
+      node.style.setProperty('--delay', (-rand(0, dur)).toFixed(1) + 's');
+      node.style.setProperty('--spin', Math.round(rand(-160, 160)) + 'deg');
+      node.appendChild(make('span'));
+      layer.appendChild(node);
+    }
+
+    var wings = [['#e7a99f', '#f3cfc6'], ['#e9c27d', '#f6e0b0']];
+    [{ y: '28%', dur: 26, delay: 3, reverse: false }, { y: '62%', dur: 30, delay: 16, reverse: true }].forEach(function (b, k) {
+      var fly = make('span', 'butterfly' + (b.reverse ? ' reverse' : ''));
+      fly.style.setProperty('--y', b.y);
+      fly.style.setProperty('--dur', b.dur + 's');
+      fly.style.setProperty('--delay', b.delay + 's');
+      var c = wings[k];
+      fly.innerHTML =
+        '<svg viewBox="0 0 40 30" focusable="false">' +
+        '<g class="wing wing-l"><ellipse cx="11" cy="10" rx="10" ry="8" fill="' + c[0] + '"/><ellipse cx="13" cy="21" rx="7" ry="6" fill="' + c[1] + '"/></g>' +
+        '<g class="wing wing-r"><ellipse cx="29" cy="10" rx="10" ry="8" fill="' + c[0] + '"/><ellipse cx="27" cy="21" rx="7" ry="6" fill="' + c[1] + '"/></g>' +
+        '<rect x="19" y="6" width="2" height="19" rx="1" fill="#6b4a3c"/>' +
+        '<path d="M20 7 q-3 -5 -6 -6 M20 7 q3 -5 6 -6" stroke="#6b4a3c" stroke-width="0.8" fill="none"/>' +
+        '</svg>';
+      layer.appendChild(fly);
+    });
+  }
+
+  // Chạm vào đâu cũng nảy ra vài trái tim nhỏ.
+  document.addEventListener('pointerdown', function (e) {
+    if (e.isPrimary === false) return;
+    fx.pop(e.clientX, e.clientY);
+  }, { passive: true });
+
   /* ---------- Khởi động ---------- */
+  buildGarland();
+  buildAmbient();
   renderLetter();
   renderQuiz();
   renderAward();
