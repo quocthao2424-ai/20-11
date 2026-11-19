@@ -64,39 +64,166 @@
     </g>
   </svg>
 
+
+  <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+  <button type="button" class="music-btn" id="music-btn" aria-pressed="false" aria-label="Bật nhạc" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18.5a2.5 2.5 0 1 1-2-2.45V5.5l11-2v11a2.5 2.5 0 1 1-2-2.45V7.1l-7 1.3z" fill="currentColor"/></svg>
+  </button>
+
   <main class="page">
-    <header class="cover">
-      <p class="cover-date" id="cover-date">20 tháng 11</p>
-      <h1 class="cover-title" id="cover-title">Gửi em</h1>
-    </header>
+    <!-- ===== Màn 1: Phong thư ===== -->
+    <section class="scene scene-letter" id="scene-letter" aria-labelledby="cover-title">
+      <header class="cover">
+        <p class="cover-date" id="cover-date">20 tháng 11</p>
+        <h1 class="cover-title" id="cover-title">Gửi em</h1>
+      </header>
 
-    <div class="envelope" id="envelope">
-      <div class="env-back" aria-hidden="true"></div>
+      <div class="envelope" id="envelope">
+        <div class="env-back" aria-hidden="true"></div>
 
-      <article class="letter" id="letter" tabindex="-1" aria-label="Lá thư">
-        <p class="letter-date" id="letter-date">Ngày 20 tháng 11</p>
-        <figure class="letter-photo" id="letter-photo" hidden></figure>
-        <div class="letter-body" id="letter-body">
-          <p>Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui trong nghề mình yêu. Anh tự hào về em và thương em nhiều!</p>
+        <article class="letter" id="letter" tabindex="-1" aria-label="Lá thư">
+          <p class="letter-date" id="letter-date">Ngày 20 tháng 11</p>
+          <figure class="letter-photo" id="letter-photo" hidden></figure>
+          <p class="letter-greeting" id="letter-greeting">Gửi cô giáo của anh,</p>
+          <div class="letter-body" id="letter-body">
+            <p>Chúc em một ngày 20/11 thật vui. Anh mong em luôn tìm thấy niềm vui trong nghề mình yêu. Anh tự hào về em và thương em nhiều!</p>
+          </div>
+          <p class="letter-sign">
+            <span class="letter-closing" id="letter-closing">Thương em,</span>
+            <span class="letter-name" id="letter-name">Anh</span>
+          </p>
+        </article>
+
+        <div class="env-front" aria-hidden="true"></div>
+        <div class="env-flap" aria-hidden="true">
+          <div class="env-flap-shape"></div>
+          <span class="env-seal">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" fill="currentColor"/></svg>
+          </span>
         </div>
-        <p class="letter-sign">
-          <span class="letter-closing" id="letter-closing">Thương em,</span>
-          <span class="letter-name" id="letter-name">Anh</span>
-        </p>
-      </article>
-
-      <div class="env-front" aria-hidden="true"></div>
-      <div class="env-flap" aria-hidden="true">
-        <div class="env-flap-shape"></div>
-        <span class="env-seal">
-          <svg viewBox="0 0 24 24" focusable="false"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" fill="currentColor"/></svg>
-        </span>
       </div>
-    </div>
 
-    <div class="actions">
-      <button type="button" class="open-btn" id="open-btn" aria-controls="letter" aria-expanded="false" hidden>Mở thư</button>
-    </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="open-btn" aria-controls="letter" aria-expanded="false" hidden>Mở thư</button>
+        <button type="button" class="btn btn-soft next-btn" id="letter-next" hidden>Còn bất ngờ nữa đó</button>
+      </div>
+    </section>
+
+    <!-- ===== Màn 2: Bài kiểm tra ===== -->
+    <section class="scene" id="scene-quiz" aria-labelledby="quiz-title" hidden>
+      <div class="notebook">
+        <div class="notebook-head">
+          <div class="notebook-info">
+            <h2 class="notebook-title" id="quiz-title" tabindex="-1">Bài kiểm tra 15 phút</h2>
+            <p class="notebook-meta" id="quiz-subject">Môn: Hiểu anh</p>
+            <p class="notebook-meta">Họ tên: <span class="handwrite" id="quiz-name">Cô giáo của anh</span></p>
+          </div>
+          <div class="score" id="quiz-score" aria-live="polite">
+            <span class="score-label">Điểm</span>
+            <span class="score-value" id="quiz-score-value" aria-label="Chưa chấm">?</span>
+          </div>
+        </div>
+        <p class="notebook-hint" id="quiz-hint"></p>
+        <ol class="quiz" id="quiz-list"></ol>
+        <div class="remark" id="quiz-remark" hidden>
+          <span class="remark-label">Lời phê:</span>
+          <span class="remark-text" id="quiz-remark-text"></span>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-soft next-btn" id="quiz-next" hidden>Nhận giấy khen</button>
+      </div>
+    </section>
+
+    <!-- ===== Màn 3: Giấy khen ===== -->
+    <section class="scene" id="scene-award" aria-labelledby="award-title" hidden>
+      <div class="award">
+        <div class="award-inner">
+          <p class="award-nation" id="award-nation">VƯƠNG QUỐC TRÁI TIM ANH</p>
+          <p class="award-motto" id="award-motto">Thương em · Nhớ em · Chiều em</p>
+          <h2 class="award-title" id="award-title" tabindex="-1">Giấy khen</h2>
+          <p class="award-line">Trao tặng</p>
+          <p class="award-name" id="award-name">Cô giáo của anh</p>
+          <p class="award-line">Danh hiệu</p>
+          <p class="award-honor" id="award-honor">Cô giáo dễ thương nhất thế giới</p>
+          <p class="award-line" id="award-reason-label">Vì đã</p>
+          <ul class="award-reasons" id="award-reasons"></ul>
+          <div class="award-foot">
+            <p class="award-date" id="award-date">Ngày 20 tháng 11</p>
+            <div class="award-sign">
+              <span class="award-signer" id="award-signer">Người trao</span>
+              <span class="award-signature" id="award-signature">Anh</span>
+              <span class="award-stamp" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" fill="currentColor"/></svg>
+                <span id="award-stamp-text">ĐÃ DUYỆT</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-soft next-btn" id="award-next" hidden>Mở quà nào</button>
+      </div>
+    </section>
+
+    <!-- ===== Màn 4: Hộp quà ===== -->
+    <section class="scene" id="scene-gift" aria-labelledby="gift-title" hidden>
+      <p class="scene-kicker">Bất ngờ cuối cùng</p>
+      <h2 class="scene-title" id="gift-title" tabindex="-1">Một món quà nhỏ</h2>
+
+      <div class="gift-stage" id="gift-stage">
+        <button type="button" class="gift" id="gift-btn" aria-describedby="gift-hint">
+          <span class="gift-lid" aria-hidden="true"><span class="gift-bow"></span></span>
+          <span class="gift-box" aria-hidden="true"></span>
+          <span class="visually-hidden">Mở hộp quà</span>
+        </button>
+        <p class="gift-hint" id="gift-hint">Chạm vào hộp quà để mở</p>
+      </div>
+
+      <div class="gift-content" id="gift-content" hidden>
+        <svg class="bouquet" viewBox="0 0 200 230" role="img" aria-labelledby="bouquet-note">
+          <g stroke="#7f915f" stroke-width="3" stroke-linecap="round" fill="none">
+            <path d="M100 205 L100 70"/><path d="M100 200 L62 92"/><path d="M100 200 L138 92"/>
+            <path d="M100 200 L80 50"/><path d="M100 200 L122 50"/>
+          </g>
+          <g fill="#9aab78">
+            <ellipse cx="80" cy="120" rx="16" ry="6" transform="rotate(-35 80 120)"/>
+            <ellipse cx="120" cy="118" rx="16" ry="6" transform="rotate(35 120 118)"/>
+            <ellipse cx="96" cy="100" rx="13" ry="5" transform="rotate(-70 96 100)"/>
+          </g>
+          <g class="bloom" style="--d:.05s"><use href="#flower" x="62" y="92" fill="#e3a59b"/></g>
+          <g class="bloom" style="--d:.2s"><use href="#flower" x="138" y="92" fill="#dc978c"/></g>
+          <g class="bloom" style="--d:.35s"><use href="#flower" x="100" y="70" fill="#f2c2b8"/></g>
+          <g class="bloom" style="--d:.5s"><use href="#flower" x="80" y="50" fill="#d98a7f"/></g>
+          <g class="bloom" style="--d:.65s"><use href="#flower" x="122" y="50" fill="#eab4ab"/></g>
+          <path d="M58 128 L142 128 L112 214 L88 214 Z" fill="#ead2ad"/>
+          <path d="M58 128 L100 150 L142 128 L132 160 L100 170 L68 160 Z" fill="#e1c39a"/>
+          <path d="M88 182 Q100 176 112 182 L112 192 Q100 186 88 192 Z" fill="#b4766c"/>
+          <path d="M100 186 q-22 -16 -26 2 q8 10 26 -2 z M100 186 q22 -16 26 2 q-8 10 -26 -2 z" fill="#c98a80"/>
+          <defs>
+            <g id="flower">
+              <circle cx="0" cy="-10" r="10"/><circle cx="9.5" cy="-3" r="10"/><circle cx="6" cy="8" r="10"/>
+              <circle cx="-6" cy="8" r="10"/><circle cx="-9.5" cy="-3" r="10"/>
+              <circle r="5" fill="#d9a35f"/>
+            </g>
+          </defs>
+        </svg>
+        <p class="bouquet-note" id="bouquet-note">Tặng em một bó hoa không bao giờ héo.</p>
+
+        <h3 class="coupons-title" id="coupons-title">Phiếu quà dành riêng cho em</h3>
+        <ul class="coupons" id="coupons" aria-labelledby="coupons-title"></ul>
+
+        <div class="ask" id="ask">
+          <p class="ask-question" id="ask-question">Em có thương anh không?</p>
+          <div class="ask-buttons" id="ask-buttons">
+            <button type="button" class="btn btn-primary ask-yes" id="ask-yes">Có chứ</button>
+            <button type="button" class="btn btn-ghost ask-no" id="ask-no">Không</button>
+          </div>
+          <div class="ask-answer" id="ask-answer" aria-live="polite"></div>
+          <button type="button" class="btn btn-soft" id="restart-btn" hidden>Xem lại từ đầu</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="content.js"></script>

@@ -8,10 +8,10 @@ thoại qua 4G/5G, kể cả khi máy tính của bạn đã tắt.
 
 | Tệp          | Vai trò                                                     |
 | ------------ | ----------------------------------------------------------- |
-| `index.html` | Khung trang: bìa thiệp, phong thư, lá thư, nút “Mở thư”     |
-| `styles.css` | Màu sắc, bố cục, hiệu ứng mở nắp phong bì (~400 ms)          |
-| `content.js` | **Nội dung cần sửa**: lời chúc, tên, chữ ký, ảnh kỷ niệm     |
-| `script.js`  | Đổ nội dung vào trang và xử lý nút “Mở thư”                 |
+| `index.html` | Khung trang: phong thư, bài kiểm tra, giấy khen, hộp quà     |
+| `styles.css` | Màu sắc, bố cục, các hiệu ứng                               |
+| `content.js` | **Nội dung cần sửa**: lời chúc, câu hỏi, phiếu quà, ảnh, nhạc |
+| `script.js`  | Đổ nội dung vào trang, chuyển màn, hoa rơi, pháo hoa trái tim |
 
 ## 1. Chạy thử tại máy
 
@@ -38,35 +38,71 @@ Nên kiểm tra:
   Hiệu ứng động; iPhone: Trợ năng → Chuyển động → Giảm chuyển động). Lúc này thư
   hiện ngay, không có hiệu ứng.
 
-## 2. Sửa lời chúc, tên, chữ ký, ảnh
+## 2. Thiệp có gì
 
-Chỉ cần mở `content.js`:
+Người nhận đi lần lượt qua 4 màn. Màn sau chỉ hiện khi xong màn trước:
 
-```js
-window.NOI_DUNG_THIEP = {
-  ngay: "20 tháng 11",            // dòng nhỏ trên bìa
-  tenNguoiNhan: "em",             // tiêu đề bìa sẽ là “Gửi em”
-  ngayTrongThu: "Ngày 20 tháng 11",
-  loiChuc: `Chúc em một ngày 20/11 thật vui. ...`,
-  loiKet: "Thương em,",
-  chuKy: "Anh",
-  anhKyNiem: "anh/ky-niem.jpg",   // để trống "" thì khung ảnh tự ẩn
-  moTaAnh: "Ảnh kỷ niệm của hai đứa"
-};
+1. **Phong thư**: bấm “Mở thư”, nắp mở, lá thư trồi lên kèm ảnh kỷ niệm và hoa rơi.
+2. **Bài kiểm tra 15 phút – Môn: Hiểu anh**: trang giấy tập kẻ dòng, có lề đỏ.
+   Chọn đáp án nào cũng đúng; làm xong được đóng dấu **10 điểm** bằng mực đỏ, kèm lời phê.
+3. **Giấy khen** kiểu văn bản hành chính “VƯƠNG QUỐC TRÁI TIM ANH”, có con dấu đỏ.
+4. **Hộp quà**: chạm vào thì bó hoa nở, có pháo hoa trái tim và các phiếu quà. Cuối
+   cùng là câu “Em có thương anh không?”. Mỗi lần bấm “Không”, nút đó nhỏ lại và đổi
+   chữ, còn nút “Có” to dần. Bấm “Có” thì hiện lời nhắn cuối.
+
+Nếu điện thoại bật “giảm chuyển động”, mọi thứ hiện ngay, không có hiệu ứng.
+
+## 3. Sửa nội dung
+
+Mọi chữ, ảnh, câu hỏi đều nằm trong `content.js`, được chia theo từng màn và có chú
+thích tiếng Việt. Vài điểm hay sửa:
+
+- `loiChuc`: lời chúc chính, nằm giữa hai dấu huyền `` ` `` nên viết được nhiều dòng.
+  Xuống dòng một lần là ngắt dòng, để một dòng trống là sang đoạn mới.
+- `baiKiemTra.cauHoi`: mỗi câu gồm `hoi` (câu hỏi), `traLoi` (các đáp án) và
+  `phanHoi` (lời khen sau khi chọn). Thêm hay bớt câu đều được.
+- `giayKhen.lyDo`, `hopQua.phieuQua`, `hopQua.khiBamKhong`: là danh sách, mỗi dòng
+  một mục, các mục cách nhau bằng dấu phẩy.
+- Muốn bỏ một màn: đổi `batDau: true` thành `batDau: false`.
+- **Ảnh**: đang dùng `anh/ky-niem.jpg` (bản nén 900 px, khoảng 175 KB). Muốn đổi ảnh
+  thì chép ảnh mới vào thư mục `anh` rồi sửa `anhKyNiem`. Tên tệp nên viết không
+  dấu, không khoảng trắng, và đường dẫn không bắt đầu bằng `/`. Không cần đưa ảnh
+  PNG gốc (1,9 MB) lên GitHub.
+- **Nhạc nền** (tùy chọn): chép một tệp `.mp3` vào thư mục `nhac`, rồi ghi
+  `nhac: "nhac/ten-bai.mp3"`. Nhạc phát khi bấm “Mở thư”, và có nút bật/tắt ở góc
+  trái. Nên dùng bản nhạc bạn có quyền dùng, dung lượng dưới 3 MB để mở nhanh trên 4G.
+
+### Mẫu lời chúc để thay
+
+Chép một mẫu dưới đây vào giữa hai dấu `` ` `` của `loiChuc`.
+
+**Ngắn, ngọt**
+
+```
+Chúc cô giáo của anh một ngày 20/11 thật nhiều hoa, thật nhiều tiếng cười và thật ít bài phải chấm. Cảm ơn em vì đã luôn dịu dàng với học trò, và dịu dàng với cả anh nữa. Anh tự hào về em và thương em nhiều!
 ```
 
-- Lời chúc nằm giữa hai dấu huyền `` ` `` nên có thể viết nhiều dòng. Xuống dòng
-  một lần là ngắt dòng, để một dòng trống là sang đoạn mới.
-- Ảnh kỷ niệm hiện dùng `anh/ky-niem.jpg` (bản nén 900 px, khoảng 175 KB, làm
-  từ ảnh gốc PNG trong cùng thư mục). Muốn đổi ảnh: chép ảnh mới vào thư mục
-  `anh`, rồi sửa `anhKyNiem`. Dùng đường dẫn tương đối, **không** bắt đầu bằng
-  `/`. Tên tệp nên viết không dấu, không khoảng trắng, đúng chữ hoa/thường
-  (GitHub Pages phân biệt `Anh.JPG` với `anh.jpg`). Nên thu nhỏ ảnh còn khoảng
-  900–1200 px chiều ngang để mở nhanh trên 4G. Không cần đưa ảnh PNG gốc
-  (1,9 MB) lên GitHub.
-- Lưu lại rồi tải lại trang để xem.
+**Vui, kiểu “học trò nộp bài”**
 
-## 3. Xuất bản lên GitHub Pages
+```
+Thưa cô, hôm nay học trò tên Anh xin nộp bài tập về nhà: một lá thư.
+
+Đề bài là “Kể về người con gái em thương nhất”. Bài làm: người đó đứng lớp cả ngày mà vẫn cười rất xinh, về nhà còn chịu khó nghe anh kể chuyện linh tinh. Người đó là em.
+
+Mong cô chấm nhẹ tay. Chúc cô một ngày 20/11 thật vui!
+```
+
+**Khi hai người đang ở xa nhau**
+
+```
+Hôm nay anh không thể tự tay tặng hoa cho em, nên anh gửi tạm lá thư này. Dù ở xa, anh vẫn biết em đang đứng lớp, vẫn nghĩ đến học trò trước rồi mới nghĩ đến mình.
+
+Anh mong em luôn khoẻ, luôn tìm thấy niềm vui trong nghề mình yêu. Đợi anh về, anh sẽ tặng em bó hoa thật, cùng một cái ôm thật lâu.
+
+Anh tự hào về em và thương em nhiều!
+```
+
+## 4. Xuất bản lên GitHub Pages
 
 1. Đăng nhập <https://github.com>, bấm **New repository**. Đặt tên, ví dụ
    `thiep-20-11`, chọn **Public** (GitHub Pages miễn phí cần kho công khai), rồi
@@ -98,14 +134,14 @@ Sau này muốn sửa lời chúc: sửa `content.js` ngay trên GitHub (biểu 
 rồi commit. Trang tự cập nhật sau 1–2 phút, đường dẫn giữ nguyên nên không phải
 tạo lại QR.
 
-## 4. Kiểm tra trước khi gửi
+## 5. Kiểm tra trước khi gửi
 
 1. Mở URL công khai trong cửa sổ ẩn danh trên máy tính.
 2. Trên điện thoại, **tắt Wi‑Fi**, dùng 4G/5G mở URL. Bấm “Mở thư” và đọc hết thư.
 
-## 5. Tạo mã QR
+## 6. Tạo mã QR
 
-Chỉ tạo QR **sau khi** URL công khai đã kiểm tra xong ở bước 4.
+Chỉ tạo QR **sau khi** URL công khai đã kiểm tra xong ở bước 5.
 
 Bằng dòng lệnh (Node.js), thay URL bằng địa chỉ thật:
 
